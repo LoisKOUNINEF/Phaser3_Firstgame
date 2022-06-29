@@ -61,6 +61,7 @@ class MyGame extends Phaser.Scene
             repeat: -1,
         });
 
+        // stars
         const stars = this.physics.add.group({
             key: "star",
             repeat: 11,
@@ -70,9 +71,21 @@ class MyGame extends Phaser.Scene
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
         this.physics.add.collider(stars, platforms);
-        this.physics.add.overlap(this.player, stars, collect, null, this);
-        function collect(player, star) {
+        this.physics.add.overlap(this.player, stars, collectStars, null, this);
+
+        function collectStars(player, star) {
             star.disableBody(true, true);
+        }
+
+        // bombs
+        const bombs = this.physics.add.group();
+        this.physics.add.collider(bombs, platforms);
+        this.physics.add.collider(this.player, bombs, bombTouched, null, this);
+
+        function bombTouched(player, bomb) {
+            this.physics.pause();
+            this.player.setTint(0xff000);
+            this.player.anims.play("turn");
         }
 
     }

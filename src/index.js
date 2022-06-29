@@ -23,7 +23,7 @@ class MyGame extends Phaser.Scene
             frameHeight: 48,
         });
     }
-      
+
     create () {
         this.add.image(400, 300, 'sky');
 
@@ -73,19 +73,29 @@ class MyGame extends Phaser.Scene
         this.physics.add.collider(stars, platforms);
         this.physics.add.overlap(this.player, stars, collectStars, null, this);
 
-        function collectStars(player, star) {
-            star.disableBody(true, true);
-        }
-
         // bombs
         const bombs = this.physics.add.group();
         this.physics.add.collider(bombs, platforms);
         this.physics.add.collider(this.player, bombs, bombTouched, null, this);
 
+        //score DIsplay
+        const scoreText = this.add.text(15, 15, "Score: 0", {
+            fontSize: "2rem",
+            fill: "#000",
+        });
+        let score = 0;
+
+        // stars and bomb collisions with player
         function bombTouched(player, bomb) {
             this.physics.pause();
             this.player.setTint(0xff000);
             this.player.anims.play("turn");
+        }
+
+        function collectStars(player, star) {
+            star.disableBody(true, true);
+            score+=1;
+            scoreText.setText("Score : " + score)
         }
 
     }
